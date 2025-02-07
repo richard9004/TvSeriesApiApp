@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Database;
-use App\DTO\ResponseDTO;
+use App\DTO\TVSeriesEntity;
 use PDO;
 use DateTimeImmutable;
 
@@ -17,7 +17,7 @@ class TVSeriesRepository {
         $this->db = $database->getConnection();
     }
 
-    public function getNextAiring(?string $title, string $dateTimeShow): ?ResponseDTO {
+    public function getNextAiring(?string $title, string $dateTimeShow): ?TVSeriesEntity {
         
         $inputElements = [':dateTimeShow' => $dateTimeShow];
         $query = "SELECT ts.title, ts.channel, tsi.week_day, tsi.show_time
@@ -38,7 +38,7 @@ class TVSeriesRepository {
         $result = $statement->fetch();
 
         if ($result) {
-            return new ResponseDTO(
+            return new TVSeriesEntity(
                 $result['title'],
                 $result['channel'],
                 $result['week_day'],

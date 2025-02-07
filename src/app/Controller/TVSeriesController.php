@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Repository\TVSeriesRepository;
 use App\DTO\RequestDTO;
-use App\DTO\ResponseDTO;
+use App\DTO\TVSeriesEntity;
 use Exception;
 use App\RequestValidator;
 
@@ -18,21 +18,20 @@ class TVSeriesController {
         $this->repository = $repository;
     }
 
-    public function getNextAiring(RequestDTO $dto): ?ResponseDTO {
-     
-       
-        RequestValidator::validate($dto->title, $dto->datetime);
+    public function getNextAiring(RequestDTO $dto): ?TVSeriesEntity {
+         
+         RequestValidator::validate([
+                'title' => $dto->title,
+                'datetime' => $dto->datetime
+         ], [
+                'title' => 'alphanumeric',
+                'datetime' => 'datetime'
+         ]);
 
-        if (empty($dto->datetime)) {
-            $formatedDate = date('Y-m-d H:i:s');
-        }else{
-            $formatedDate = strtotime($dto->datetime);
-            $formatedDate = date('Y-m-d H:i:s', $formatedDate);
-        }
-
-        return $this->repository->getNextAiring(
+         return $this->repository->getNextAiring(
               $dto->title,
-              $formatedDate
-        );
+              $dto->datetime
+          );
+    
     }
 }

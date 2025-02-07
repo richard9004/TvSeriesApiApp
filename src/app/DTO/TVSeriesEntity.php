@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\DTO;
 
-class ResponseDTO {
+class TVSeriesEntity {
     public function __construct(
         public string $title,
         public string $channel,
@@ -12,6 +12,6 @@ class ResponseDTO {
         public string $showTime 
     ) {}
 
-
+    
 
 }

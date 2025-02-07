@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types=1);
-
 namespace App;
 
 use PDO;
@@ -10,6 +9,7 @@ use Dotenv\Dotenv;
 
 class Database
 {
+    private static ?PDO $connection = null;
     public function __construct(
         private string $host,
         private string $name,
@@ -20,13 +20,14 @@ class Database
 
     public function getConnection(): PDO
     {
-        $dsn = "mysql:host={$this->host};dbname={$this->name};charset=utf8";
-
-      //  echo $this->password;
-
-        return new PDO($dsn, $this->user, $this->password, [
+        if (self::$connection === null) {
+            $dsn = "mysql:host={$this->host};dbname={$this->name};charset=utf8";
+            self::$connection =  new PDO($dsn, $this->user, $this->password, [
                 PDO::ATTR_EMULATE_PREPARES=>false,
                 PDO::ATTR_STRINGIFY_FETCHES=>false
             ]);
+        }
+        return self::$connection;
+        
     }
 }
